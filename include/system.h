@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "linux_parser.h"
 #include "process.h"
 #include "processor.h"
 
@@ -18,10 +19,14 @@ class System {
   std::string Kernel();               // TODO: See src/system.cpp
   std::string OperatingSystem();      // TODO: See src/system.cpp
 
-  // TODO: Define any necessary private members
  private:
   Processor cpu_ = {};
   std::vector<Process> processes_ = {};
+  // initializing Kernel_ private member using LinuxParser Kernel function
+  std::string Kernel_ = LinuxParser::Kernel();
+
+  // initializing OS_ private member using LinuxParser OperatingSystem function
+  std::string OS_ = LinuxParser::OperatingSystem();
 };
 
 #endif
