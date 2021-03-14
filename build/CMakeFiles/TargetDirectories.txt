@@ -1,3 +1,0 @@
-/home/hossein/Udacity/LinuxSystemMonitor/build/CMakeFiles/rebuild_cache.dir
-/home/hossein/Udacity/LinuxSystemMonitor/build/CMakeFiles/monitor.dir
-/home/hossein/Udacity/LinuxSystemMonitor/build/CMakeFiles/edit_cache.dir
