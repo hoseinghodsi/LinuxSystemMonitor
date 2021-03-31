@@ -1,6 +1,11 @@
 # Linux System Monitor
 
-![System Monitor](images/monitor.png)
+![System Monitor](images/runningDemo.jpg)
+
+## Dependency: "ncurses" library
+[ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
+
+ncurses can be installed using: `sudo apt install libncurses5-dev libncursesw5-dev`
 
 ## Make
 This project uses [Make](https://www.gnu.org/software/make/). The Makefile has four targets:
