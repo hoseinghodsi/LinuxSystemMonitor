@@ -15,8 +15,23 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-// TODO: Return the system's CPU
+int System::system_n_CPUs() {
+    return nCPU_;
+}
+
 Processor& System::Cpu() { return cpu_; }
+
+std::vector<Processor>& System::CPUs() {
+    std::vector<Processor> listCPUs{};
+    for (int i = 0; i < System::system_n_CPUs(); i++) {
+        Processor cpu;
+        listCPUs.push_back(cpu);
+    }
+    CPUs_ = listCPUs;
+
+    return CPUs_;
+}
+   
 
 // finding currently running processes
 // Creating a vector of processes and sorting them based on their CPU usage
@@ -27,7 +42,6 @@ vector<Process>& System::Processes() {
         Process process{idx};
         runningProcesses.push_back(process);
     }
-
     // sorting
     sort(runningProcesses.begin(), runningProcesses.end(), 
                         [](const Process& A, const Process& B) {
@@ -38,20 +52,22 @@ vector<Process>& System::Processes() {
     return processes_;
 }
 
-// TODO: Return the system's kernel identifier (string)
 std::string System::Kernel() { return Kernel_; }
 
-// TODO: Return the system's memory utilization
-float System::MemoryUtilization() { return LinuxParser::MemoryUtilization(); }
+float System::MemoryUtilization() { return MemoryUtilization_; }
 
-// TODO: Return the operating system name
 std::string System::OperatingSystem() { return OS_; }
 
-// TODO: Return the number of processes actively running on the system
-int System::RunningProcesses() { return LinuxParser::RunningProcesses(); }
+int System::RunningProcesses() { return RunningProcesses_; }
 
-// TODO: Return the total number of processes on the system
-int System::TotalProcesses() { return LinuxParser::TotalProcesses(); }
+int System::TotalProcesses() { return TotalProcesses_; }
 
-// TODO: Return the number of seconds since the system started running
-long int System::UpTime() { return LinuxParser::UpTime(); }
+long int System::UpTime() { return UpTime_; }
+
+// Constructor definition
+System::System() {
+    MemoryUtilization_ = LinuxParser::MemoryUtilization();
+    RunningProcesses_ = LinuxParser::RunningProcesses();
+    TotalProcesses_ = LinuxParser::TotalProcesses();
+    UpTime_ = LinuxParser::UpTime();
+}

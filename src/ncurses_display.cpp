@@ -3,6 +3,7 @@
 #include <string>
 #include <thread>
 #include <vector>
+#include <iostream>
 
 #include "format.h"
 #include "ncurses_display.h"
@@ -22,9 +23,9 @@ std::string NCursesDisplay::ProgressBar(float percent) {
     result += i <= bars ? '|' : ' ';
   }
 
-  string display{to_string(percent * 100).substr(0, 4)};
-  if (percent < 0.1 || percent == 1.0)
-    display = " " + to_string(percent * 100).substr(0, 3);
+  string display{to_string(percent * 100).substr(0, 6)};
+  if (percent < 0.001 || percent == 1.0)
+    display = " " + to_string(percent * 100).substr(0, 5);
   return result + " " + display + "/100%";
 }
 
@@ -35,8 +36,19 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   mvwprintw(window, ++row, 2, "CPU: ");
   wattron(window, COLOR_PAIR(1));
   mvwprintw(window, row, 10, "");
-  wprintw(window, ProgressBar(system.Cpu().Utilization()).c_str());
+  wprintw(window, ProgressBar(system.Cpu().Utilization("cpu")).c_str());
   wattroff(window, COLOR_PAIR(1));
+
+  // Handling CPU utilization of individual CPUs
+  for (int i = 0; i < 4; i++) {
+    std::string title = "CPU" + std::to_string(i) + " ";
+    std::string cpuID = "cpu" + std::to_string(i);
+    mvwprintw(window, ++row, 2, title.c_str());
+    wattron(window, COLOR_PAIR(1));
+    mvwprintw(window, row, 10, "");
+    wprintw(window, ProgressBar(system.CPUs()[i].Utilization(cpuID)).c_str());
+    wattroff(window, COLOR_PAIR(1));   
+  }
   mvwprintw(window, ++row, 2, "Memory: ");
   wattron(window, COLOR_PAIR(1));
   mvwprintw(window, row, 10, "");
@@ -89,7 +101,7 @@ void NCursesDisplay::Display(System& system, int n) {
   start_color();  // enable color
 
   int x_max{getmaxx(stdscr)};
-  WINDOW* system_window = newwin(9, x_max - 1, 0, 0);
+  WINDOW* system_window = newwin(13, x_max - 1, 0, 0);
   WINDOW* process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 

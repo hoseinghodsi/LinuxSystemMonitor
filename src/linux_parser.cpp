@@ -104,7 +104,7 @@ float LinuxParser::MemoryUtilization() {
   return (MemTotal - (MemFree + Buffers + Cached)) / MemTotal;
 }
 
-// TODO: Read and return the system uptime
+// Calculating system's overall uptime 
 long LinuxParser::UpTime() { 
   std::string line;
   std::string sysUpTime;
@@ -121,19 +121,12 @@ long LinuxParser::UpTime() {
   }
  }
 
-// TODO: Read and return the number of jiffies for the system
 long LinuxParser::Jiffies() { return 0; }
-
-// TODO: Read and return the number of active jiffies for a PID
-// REMOVE: [[maybe_unused]] once you define the function
 long LinuxParser::ActiveJiffies(int pid[[maybe_unused]]) { return 0; }
-
-// TODO: Read and return the number of active jiffies for the system
 long LinuxParser::ActiveJiffies() { return 0; }
-
-// TODO: Read and return the number of idle jiffies for the system
 long LinuxParser::IdleJiffies() { return 0; }
 
+// Calculating CPU utilization for any given processes
 float LinuxParser::CpuUtilization(int pid) {
   std::string line;
   std::string item;
@@ -144,7 +137,6 @@ float LinuxParser::CpuUtilization(int pid) {
   long starttime;
 
   std::ifstream filestream(kProcDirectory + "/" + std::to_string(pid) + kStatFilename);
-  //try {
     if (filestream.is_open()) {
       while (std::getline(filestream, line)) {
         std::istringstream stream(line);
@@ -175,12 +167,10 @@ float LinuxParser::CpuUtilization(int pid) {
     float cpuUsage = ((totalTime / hertz) / seconds);
     return cpuUsage;
 
-  //} catch (...) {
-  //  return 0;
-  //}
 }
 
-vector<std::string> LinuxParser::CpuUtilization() {
+// Findind the required values for any desired CPU utilization
+vector<std::string> LinuxParser::CpuUtilization(std::string cpuID) {
   std::vector<std::string> cpuUtilComp{};
   std::string line;
   std::string key;
@@ -192,7 +182,7 @@ vector<std::string> LinuxParser::CpuUtilization() {
       std::istringstream stream(line);
       while (stream >> key >> user >> nice >> system >> idle >> iowait >> irq >>
              softirq >> steal >> guest >> guest_niced) {
-        if (key == "cpu") {
+        if (key == cpuID) {
           cpuUtilComp.push_back(user);
           cpuUtilComp.push_back(nice);
           cpuUtilComp.push_back(system);
@@ -202,13 +192,13 @@ vector<std::string> LinuxParser::CpuUtilization() {
           cpuUtilComp.push_back(softirq);
           cpuUtilComp.push_back(steal);
           cpuUtilComp.push_back(guest);
-          cpuUtilComp.push_back(guest_niced);                              
-        }
-        return cpuUtilComp;         
+          cpuUtilComp.push_back(guest_niced);
+          return cpuUtilComp;                              
+        }         
       }
     }
   }
-  return {};
+  return cpuUtilComp;
 }
 
 // parsing through /proc/stat
@@ -247,7 +237,7 @@ int LinuxParser::RunningProcesses() {
   }
 }
 
-
+// Finding the Command used to launch any desired processes
 string LinuxParser::Command(int pid) {
   std::string command = "";
   std::ifstream filestream(kProcDirectory + "/" + std::to_string(pid) + kCmdlineFilename);
@@ -258,7 +248,7 @@ string LinuxParser::Command(int pid) {
   return command;
 }
 
-
+// Findind the occupied RAM by any desired processes
 string LinuxParser::Ram(int pid) {
   std::string line;
   std::string k;
@@ -277,6 +267,7 @@ string LinuxParser::Ram(int pid) {
   return v;
 }
 
+// Finding the ID of the user owning any desired processes  
 string LinuxParser::Uid(int pid) {
   std::string line;
   std::string key;
@@ -296,6 +287,7 @@ string LinuxParser::Uid(int pid) {
   return value;
 }
 
+// Finding the user owning the process
 string LinuxParser::User(int pid) {
   std::string uid = Uid(pid);
   std::string line;
@@ -317,6 +309,7 @@ string LinuxParser::User(int pid) {
   return user;
 }
 
+// Calculating the uptime for any desired processes
 long LinuxParser::UpTime(int pid) {
   std::string line;
   std::string value;

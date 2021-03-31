@@ -26,6 +26,7 @@ int TotalProcesses();
 int RunningProcesses();
 std::string OperatingSystem();
 std::string Kernel();
+int totalCPU();
 
 // CPU
 enum CPUStates {
@@ -50,7 +51,7 @@ enum PIDpos {
   nStarttime = 22,
 };
 
-std::vector<std::string> CpuUtilization();
+std::vector<std::string> CpuUtilization(std::string cpuID);
 float CpuUtilization(int pid);
 long Jiffies();
 long ActiveJiffies();
