@@ -40,7 +40,18 @@ enum CPUStates {
   kGuest_,
   kGuestNice_
 };
+
+// PID stat positions
+enum PIDpos {
+  nUtime = 14,
+  nStime = 15,
+  nCutime = 16,
+  nCstime = 17,
+  nStarttime = 22,
+};
+
 std::vector<std::string> CpuUtilization();
+float CpuUtilization(int pid);
 long Jiffies();
 long ActiveJiffies();
 long ActiveJiffies(int pid);
