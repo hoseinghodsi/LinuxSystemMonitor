@@ -10,8 +10,8 @@
 
 class System {
  public:
-  Processor& Cpu();  
-  int system_n_CPUs();                 
+  Processor& Cpu();
+  int numberCpu();                
   std::vector<Processor>& CPUs();
   std::vector<Process>& Processes();  
   float MemoryUtilization();          
@@ -33,7 +33,7 @@ class System {
   long UpTime_ = 0;
   int TotalProcesses_ = 0;
   int RunningProcesses_ = 0;
-  int nCPU_ = 4;
+  int cpuNumber_ = 0;
  
   
   // initializing Kernel_ private member using LinuxParser Kernel function

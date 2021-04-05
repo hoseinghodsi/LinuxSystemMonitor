@@ -11,7 +11,29 @@ using std::string;
 using std::to_string;
 using std::vector;
 
-// DONE: An example of how to read data from the filesystem
+// Finding out how many cpu (active cpus) the system has
+int LinuxParser::cpuNumber() {
+  std::string line;
+  std::string key;
+  std::string keyFilter = "processor";  
+  int cpuNumber = 0;
+
+  std::ifstream filestream(kProcDirectory + kCpuinfoFilename);
+
+  if (filestream.is_open()) {
+    while (std::getline(filestream, line)) {
+      std::istringstream stream(line);
+      while (stream >> key) {
+        // Counting the number of lines starting with keyword "processor"
+        if (key == keyFilter) 
+          cpuNumber++; 
+      }    
+    }
+  }
+  return cpuNumber;  
+}
+
+// An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line;
   string key;
@@ -34,7 +56,7 @@ string LinuxParser::OperatingSystem() {
   return value;
 }
 
-// DONE: An example of how to read data from the filesystem
+// An example of how to read data from the filesystem
 string LinuxParser::Kernel() {
   string os, version, kernel;
   string line;
@@ -76,9 +98,10 @@ float LinuxParser::MemoryUtilization() {
   float MemFree; 
   float Buffers;
   float Cached;
-  
+
   std::ifstream filestream(kProcDirectory + kMeminfoFilename);
   
+
   // parsing through /proc/meminfo
   if (filestream.is_open()) {
     while (std::getline(filestream, line)){
@@ -107,7 +130,7 @@ float LinuxParser::MemoryUtilization() {
 // Calculating system's overall uptime 
 long LinuxParser::UpTime() { 
   std::string line;
-  std::string sysUpTime;
+  std::string sysUpTime = "";
   std::string sysIdleTime;
 
   std::ifstream filestream(kProcDirectory + kUptimeFilename);
@@ -119,6 +142,7 @@ long LinuxParser::UpTime() {
       }
     }
   }
+  return 0;
  }
 
 long LinuxParser::Jiffies() { return 0; }
@@ -174,7 +198,16 @@ vector<std::string> LinuxParser::CpuUtilization(std::string cpuID) {
   std::vector<std::string> cpuUtilComp{};
   std::string line;
   std::string key;
-  std::string user, nice, system, idle, iowait, irq, softirq, steal, guest, guest_niced;
+  std::string user;
+  std::string nice; 
+  std::string system;
+  std::string idle; 
+  std::string iowait; 
+  std::string irq; 
+  std::string softirq;
+  std::string steal;
+  std::string guest; 
+  std::string guest_niced;
 
   std::ifstream filestream(kProcDirectory + kStatFilename);
   if (filestream.is_open()) {
@@ -217,6 +250,7 @@ int LinuxParser::TotalProcesses() {
       }
     }
   }
+  return 0;
 }
 
 // parsing through /proc/stat
@@ -235,6 +269,7 @@ int LinuxParser::RunningProcesses() {
       }
     }
   }
+  return 0;
 }
 
 // Finding the Command used to launch any desired processes
@@ -253,6 +288,9 @@ string LinuxParser::Ram(int pid) {
   std::string line;
   std::string k;
   std::string v = "";
+  int ram;
+  std::string ramString;
+
   std::ifstream filestream(kProcDirectory + "/" + std::to_string(pid) + kStatusFilename);
 
   if (filestream.is_open()) {
@@ -260,7 +298,12 @@ string LinuxParser::Ram(int pid) {
       std::replace(line.begin(), line.end(), ':', ' ');
       std::istringstream stream(line);
       while (stream >> k >> v) {
-        if (k == "VmSize") return v;
+        if (k == "VmSize") {
+          ram = std::stoi(v);
+          ram /= 1024;
+          ramString = std::to_string(ram);
+          return ramString;
+        }
       }
     }
   }
@@ -309,11 +352,11 @@ string LinuxParser::User(int pid) {
   return user;
 }
 
-// Calculating the uptime for any desired processes
+// Calculating the uptime for any desired processud
 long LinuxParser::UpTime(int pid) {
   std::string line;
   std::string value;
-  long uptime = 0;
+  long upTimePid = 0;
 
   std::ifstream filestream(kProcDirectory + "/" + std::to_string(pid) + kStatFilename);
   if (filestream.is_open()) {
@@ -323,14 +366,14 @@ long LinuxParser::UpTime(int pid) {
         stream >> value;
         if (i == nStarttime) {
           try {
-            uptime = std::stol(value) / sysconf(_SC_CLK_TCK);
-            return uptime;
-          } catch (std::invalid_argument) {
+            upTimePid = UpTime() - std::stol(value) / sysconf(_SC_CLK_TCK);
+            return upTimePid;
+          } catch (std::invalid_argument ) {
             return 0;
           }
         }
       }
     }
   }  
-  return uptime;
+  return upTimePid;
 }

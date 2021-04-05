@@ -15,15 +15,11 @@ using std::size_t;
 using std::string;
 using std::vector;
 
-int System::system_n_CPUs() {
-    return nCPU_;
-}
-
 Processor& System::Cpu() { return cpu_; }
 
 std::vector<Processor>& System::CPUs() {
     std::vector<Processor> listCPUs{};
-    for (int i = 0; i < System::system_n_CPUs(); i++) {
+    for (int i = 0; i < cpuNumber_; i++) {
         Processor cpu;
         listCPUs.push_back(cpu);
     }
@@ -31,8 +27,10 @@ std::vector<Processor>& System::CPUs() {
 
     return CPUs_;
 }
-   
 
+// getter funtion to access the number of cpus
+int System::numberCpu() { return cpuNumber_;}
+   
 // finding currently running processes
 // Creating a vector of processes and sorting them based on their CPU usage
 vector<Process>& System::Processes() {
@@ -70,4 +68,5 @@ System::System() {
     RunningProcesses_ = LinuxParser::RunningProcesses();
     TotalProcesses_ = LinuxParser::TotalProcesses();
     UpTime_ = LinuxParser::UpTime();
+    cpuNumber_ = LinuxParser::cpuNumber();
 }

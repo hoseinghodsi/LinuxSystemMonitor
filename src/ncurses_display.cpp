@@ -40,9 +40,11 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wattroff(window, COLOR_PAIR(1));
 
   // Handling CPU utilization of individual CPUs
-  for (int i = 0; i < 4; i++) {
+  // calling system class numberCpu is to determine the total number of cpus
+  for (int i = 0; i < system.numberCpu(); i++) {
     std::string title = "CPU" + std::to_string(i) + " ";
     std::string cpuID = "cpu" + std::to_string(i);
+
     mvwprintw(window, ++row, 2, title.c_str());
     wattron(window, COLOR_PAIR(1));
     mvwprintw(window, row, 10, "");
@@ -101,7 +103,9 @@ void NCursesDisplay::Display(System& system, int n) {
   start_color();  // enable color
 
   int x_max{getmaxx(stdscr)};
-  WINDOW* system_window = newwin(13, x_max - 1, 0, 0);
+
+  // setting the right dimension for the system window based on the number of cpus
+  WINDOW* system_window = newwin(9 + system.numberCpu(), x_max - 1, 0, 0);
   WINDOW* process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 
