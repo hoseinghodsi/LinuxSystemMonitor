@@ -1,6 +1,16 @@
 # Linux System Monitor
+This project creates a detailed system monitor for Linux similar to htop.
 
-![System Monitor](images/monitor.png)
+|![](images/runningDemo.jpg) |
+|:--:| 
+| *A snapshot of project running on Jetson AGX Xavier* |
+
+
+
+## Dependency: "ncurses" library
+[ncurses](https://www.gnu.org/software/ncurses/) is a library that facilitates text-based graphical output in the terminal. This project relies on ncurses for display output.
+
+ncurses can be installed using: `sudo apt install libncurses5-dev libncursesw5-dev`
 
 ## Make
 This project uses [Make](https://www.gnu.org/software/make/). The Makefile has four targets:
