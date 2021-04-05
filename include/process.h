@@ -7,25 +7,25 @@ Basic class for Process representation
 It contains relevant attributes as shown below
 */
 class Process {
- public:
+public:
   int Pid();
   std::string User();
   std::string Command();
   float CpuUtilization();
   std::string Ram();
   long int UpTime();
-  bool operator<(Process const& a) const;
+  bool operator<(Process const &a) const;
 
-  // constructor declaration 
+  // constructor declaration
   Process(int pid);
 
- private:
-    int _pid;
-    std::string _user;
-    std::string _command;
-    float _cpuUtil;
-    std::string _ram;
-    long int _pidUpTime;
+private:
+  int _pid;
+  std::string _user;
+  std::string _command;
+  float _cpuUtil;
+  std::string _ram;
+  long int _pidUpTime;
 };
 
 #endif

@@ -9,23 +9,22 @@
 #include "processor.h"
 
 class System {
- public:
-  Processor& Cpu();
-  int numberCpu();                
-  std::vector<Processor>& CPUs();
-  std::vector<Process>& Processes();  
-  float MemoryUtilization();          
-  long int UpTime();                  
-  int TotalProcesses();              
-  int RunningProcesses();             
-  std::string Kernel();               
-  std::string OperatingSystem();    
-  
-  
-  // Constructor
-  System(); 
+public:
+  Processor &Cpu();
+  int numberCpu();
+  std::vector<Processor> &CPUs();
+  std::vector<Process> &Processes();
+  float MemoryUtilization();
+  long int UpTime();
+  int TotalProcesses();
+  int RunningProcesses();
+  std::string Kernel();
+  std::string OperatingSystem();
 
- private:
+  // Constructor
+  System();
+
+private:
   Processor cpu_ = {};
   std::vector<Processor> CPUs_ = {};
   std::vector<Process> processes_ = {};
@@ -34,8 +33,7 @@ class System {
   int TotalProcesses_ = 0;
   int RunningProcesses_ = 0;
   int cpuNumber_ = 0;
- 
-  
+
   // initializing Kernel_ private member using LinuxParser Kernel function
   std::string Kernel_ = LinuxParser::Kernel();
   // initializing OS_ private member using LinuxParser OperatingSystem function

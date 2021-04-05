@@ -1,9 +1,9 @@
-#include <curses.h>
 #include <chrono>
+#include <curses.h>
+#include <iostream>
 #include <string>
 #include <thread>
 #include <vector>
-#include <iostream>
 
 #include "format.h"
 #include "ncurses_display.h"
@@ -29,7 +29,7 @@ std::string NCursesDisplay::ProgressBar(float percent) {
   return result + " " + display + "/100%";
 }
 
-void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
+void NCursesDisplay::DisplaySystem(System &system, WINDOW *window) {
   int row{0};
   mvwprintw(window, ++row, 2, ("OS: " + system.OperatingSystem()).c_str());
   mvwprintw(window, ++row, 2, ("Kernel: " + system.Kernel()).c_str());
@@ -49,7 +49,7 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
     wattron(window, COLOR_PAIR(1));
     mvwprintw(window, row, 10, "");
     wprintw(window, ProgressBar(system.CPUs()[i].Utilization(cpuID)).c_str());
-    wattroff(window, COLOR_PAIR(1));   
+    wattroff(window, COLOR_PAIR(1));
   }
   mvwprintw(window, ++row, 2, "Memory: ");
   wattron(window, COLOR_PAIR(1));
@@ -66,8 +66,8 @@ void NCursesDisplay::DisplaySystem(System& system, WINDOW* window) {
   wrefresh(window);
 }
 
-void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
-                                      WINDOW* window, int n) {
+void NCursesDisplay::DisplayProcesses(std::vector<Process> &processes,
+                                      WINDOW *window, int n) {
   int row{0};
   int const pid_column{2};
   int const user_column{9};
@@ -96,17 +96,18 @@ void NCursesDisplay::DisplayProcesses(std::vector<Process>& processes,
   }
 }
 
-void NCursesDisplay::Display(System& system, int n) {
-  initscr();      // start ncurses
-  noecho();       // do not print input values
-  cbreak();       // terminate ncurses on ctrl + c
-  start_color();  // enable color
+void NCursesDisplay::Display(System &system, int n) {
+  initscr();     // start ncurses
+  noecho();      // do not print input values
+  cbreak();      // terminate ncurses on ctrl + c
+  start_color(); // enable color
 
   int x_max{getmaxx(stdscr)};
 
-  // setting the right dimension for the system window based on the number of cpus
-  WINDOW* system_window = newwin(9 + system.numberCpu(), x_max - 1, 0, 0);
-  WINDOW* process_window =
+  // setting the right dimension for the system window based on the number of
+  // cpus
+  WINDOW *system_window = newwin(9 + system.numberCpu(), x_max - 1, 0, 0);
+  WINDOW *process_window =
       newwin(3 + n, x_max - 1, system_window->_maxy + 1, 0);
 
   while (1) {

@@ -4,9 +4,8 @@
 #include <string>
 
 namespace Format {
-std::string ElapsedTime(long times);  
+std::string ElapsedTime(long times);
 std::string SysTimeToString(long timeComp);
-};                                    // namespace Format
-
+}; // namespace Format
 
 #endif

@@ -368,7 +368,7 @@ long LinuxParser::UpTime(int pid) {
           try {
             upTimePid = UpTime() - std::stol(value) / sysconf(_SC_CLK_TCK);
             return upTimePid;
-          } catch (std::invalid_argument ) {
+          } catch (std::invalid_argument const&) {
             return 0;
           }
         }
